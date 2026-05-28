@@ -4,30 +4,28 @@
 
 :root {
   --radius: 0.625rem;
-  --background: 220 20% 8%;
-  --foreground: 0 0% 100%;
-  --card: 220 20% 10%;
-  --card-foreground: 0 0% 100%;
-  --popover: 220 20% 10%;
-  --popover-foreground: 0 0% 100%;
-  --primary: 174 72% 43%;
+  --background: 0 0% 100%;
+  --foreground: 222 47% 16%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 16%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 16%;
+  --primary: 197 75% 52%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 220 15% 15%;
-  --secondary-foreground: 0 0% 100%;
-  --muted: 220 15% 20%;
-  --muted-foreground: 220 10% 60%;
-  --accent: 174 72% 43%;
+  --secondary: 210 17% 96%;
+  --secondary-foreground: 222 47% 16%;
+  --muted: 210 17% 96%;
+  --muted-foreground: 215 16% 47%;
+  --accent: 197 75% 52%;
   --accent-foreground: 0 0% 100%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
-  --border: 220 15% 20%;
-  --input: 220 15% 20%;
-  --ring: 174 72% 43%;
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 197 75% 52%;
 }
 
-* {
-  border-color: hsl(var(--border));
-}
+* { border-color: hsl(var(--border)); }
 
 body {
   background: hsl(var(--background));
@@ -35,86 +33,46 @@ body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-html {
-  scroll-behavior: smooth;
+html { scroll-behavior: smooth; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f8fafc; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #2AB2E3; }
+
+@keyframes kenBurns {
+  0%   { transform: scale(1)    translateX(0); }
+  100% { transform: scale(1.07) translateX(-18px); }
+}
+.animate-ken-burns {
+  animation: kenBurns 22s ease-in-out infinite alternate;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
 }
+.reveal.visible { opacity: 1; transform: translateY(0); }
 
-::-webkit-scrollbar-track {
-  background: hsl(var(--background));
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-32px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
 }
+.reveal-left.visible { opacity: 1; transform: translateX(0); }
 
-::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted));
-  border-radius: 4px;
+.reveal-right {
+  opacity: 0;
+  transform: translateX(32px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
 }
+.reveal-right.visible { opacity: 1; transform: translateX(0); }
 
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--primary));
-}
-
-/* Animation utilities */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
-}
-
-@keyframes pulse-glow {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
-}
-
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 3s ease-in-out infinite;
-}
-
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient-shift 8s ease infinite;
-}
-
-/* Glass effect */
-.glass {
-  background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-/* Gradient text */
-.gradient-text {
-  background: linear-gradient(135deg, #2dd4bf 0%, #0d9488 50%, #14b8a6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Section styling */
-.section-padding {
-  padding: 6rem 1rem;
-}
-
-@media (min-width: 768px) {
-  .section-padding {
-    padding: 8rem 1.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .section-padding {
-    padding: 10rem 2rem;
-  }
-}
+.section-padding { padding: 5rem 1rem; }
+@media (min-width: 768px)  { .section-padding { padding: 7rem 1.5rem; } }
+@media (min-width: 1024px) { .section-padding { padding: 8rem 2rem; } }

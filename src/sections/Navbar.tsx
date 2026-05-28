@@ -1,106 +1,110 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
-import { useLanguage } from '@/context/LanguageContext';
-import LanguageSwitcher from '@/components/LanguageSwitcher';
+
+const NAV_ITEMS = [
+  { label: 'About',        href: '#about' },
+  { label: 'Technology',   href: '#platform' },
+  { label: 'Pipeline',     href: '#pipeline' },
+  { label: 'Diseases',     href: '#diseases' },
+  { label: 'Publications', href: '#publications' },
+  { label: 'Team',         href: '#team' },
+  { label: 'News',         href: '#news' },
+  { label: 'Contact',      href: '#contact' },
+];
 
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { t } = useLanguage();
-
-  const navItems = [
-    { label: t.nav.about, href: '#about' },
-    { label: t.nav.pipeline, href: '#pipeline' },
-    { label: t.nav.platform, href: '#platform' },
-    { label: t.nav.diseases, href: '#diseases' },
-    { label: t.nav.publications, href: '#publications' },
-    { label: t.nav.news, href: '#news' },
-    { label: t.nav.contact, href: '#contact' },
-  ];
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen]         = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const fn = () => setScrolled(window.scrollY > 60);
+    window.addEventListener('scroll', fn, { passive: true });
+    return () => window.removeEventListener('scroll', fn);
   }, []);
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'glass border-b border-white/10' : 'bg-transparent'
-      }`}
-    >
+    <nav className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+      scrolled ? 'bg-white border-b border-slate-200 shadow-sm' : ''
+    }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
+
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center">
-              <span className="text-white font-bold text-sm">Q</span>
-            </div>
-            <span className="text-white font-semibold text-lg tracking-tight group-hover:text-teal-400 transition-colors">
-              QUAERITE
+          <a href="#" className="flex items-center gap-2.5 flex-shrink-0">
+            <span className="w-7 h-7 rounded bg-[#2AB2E3] flex items-center justify-center text-white font-bold text-xs">
+              Q
+            </span>
+            <span className={`font-bold text-sm tracking-[0.18em] uppercase transition-colors ${
+              scrolled ? 'text-[#0E204C]' : 'text-white'
+            }`}>
+              Quaerite
             </span>
           </a>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-1">
-            {navItems.map((item) => (
+          {/* Desktop nav */}
+          <div className="hidden lg:flex items-center">
+            {NAV_ITEMS.map(item => (
               <a
                 key={item.href}
                 href={item.href}
-                className="px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-all"
+                className={`px-3 py-2 text-sm font-medium rounded transition-colors ${
+                  scrolled
+                    ? 'text-slate-600 hover:text-[#0E204C] hover:bg-slate-50'
+                    : 'text-white/80 hover:text-white'
+                }`}
               >
                 {item.label}
               </a>
             ))}
           </div>
 
-          {/* Right Side */}
-          <div className="hidden lg:flex items-center gap-3">
-            <LanguageSwitcher />
+          {/* CTA */}
+          <div className="hidden lg:block">
             <a
               href="#contact"
-              className="px-5 py-2.5 text-sm font-medium text-white bg-white/10 hover:bg-white/20 border border-white/20 rounded-full transition-all"
+              className={`px-5 py-2.5 text-sm font-semibold rounded transition-all ${
+                scrolled
+                  ? 'bg-[#0E204C] text-white hover:bg-[#152C5F]'
+                  : 'border border-white/30 text-white hover:bg-white/10'
+              }`}
             >
-              {t.nav.investor}
+              Partner With Us
             </a>
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="lg:hidden flex items-center gap-2">
-            <LanguageSwitcher />
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 text-white hover:bg-white/10 rounded-lg transition-colors"
-            >
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
+          {/* Mobile toggle */}
+          <button
+            onClick={() => setOpen(!open)}
+            className={`lg:hidden p-1.5 rounded transition-colors ${
+              scrolled ? 'text-[#0E204C]' : 'text-white'
+            }`}
+            aria-label="Toggle navigation"
+          >
+            {open ? <X size={22} /> : <Menu size={22} />}
+          </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="lg:hidden glass border-t border-white/10">
-          <div className="px-4 py-4 space-y-2">
-            {navItems.map((item) => (
+      {/* Mobile menu */}
+      {open && (
+        <div className="lg:hidden bg-white border-t border-slate-100 shadow-lg">
+          <div className="px-4 py-3 space-y-0.5">
+            {NAV_ITEMS.map(item => (
               <a
                 key={item.href}
                 href={item.href}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-all"
+                onClick={() => setOpen(false)}
+                className="block px-3 py-2.5 text-slate-700 hover:text-[#0E204C] hover:bg-slate-50 rounded text-sm font-medium"
               >
                 {item.label}
               </a>
             ))}
             <a
               href="#contact"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-4 py-3 text-center text-white bg-teal-600 hover:bg-teal-500 rounded-lg transition-all mt-4"
+              onClick={() => setOpen(false)}
+              className="block mt-2 px-3 py-2.5 text-center text-white bg-[#0E204C] rounded text-sm font-semibold"
             >
-              {t.nav.investor}
+              Partner With Us
             </a>
           </div>
         </div>
