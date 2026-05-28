@@ -23,7 +23,7 @@ const NEWS = [
     date: 'Dec 2025',
     tag: 'Regulatory',
     headline: 'FDA grants IND clearance for QBR202 in wet AMD',
-    summary: 'The U.S. Food and Drug Administration has cleared the IND application for QBR202, Quaerite's lead gene therapy candidate targeting neovascular age-related macular degeneration.',
+    summary: "The U.S. Food and Drug Administration has cleared the IND application for QBR202, Quaerite's lead gene therapy candidate targeting neovascular age-related macular degeneration.",
   },
 ];
 
