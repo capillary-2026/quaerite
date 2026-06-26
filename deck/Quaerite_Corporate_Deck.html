@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Quaerite — Corporate Deck</title>
+<meta name="description" content="Quaerite Corporate Deck — QBR202, the OcuHLE-X platform, and QBR207 option value." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     Quaerite brand tokens (mirrors src/index.css)
+     ============================================================ */
+  :root {
+    --bg: #0a0e14;          /* hsl(220 20% 8%)  */
+    --bg-2: #10151f;        /* hsl(220 20% 10%) */
+    --panel: rgba(255, 255, 255, 0.045);
+    --panel-strong: rgba(255, 255, 255, 0.08);
+    --border: rgba(255, 255, 255, 0.10);
+    --border-teal: rgba(20, 184, 166, 0.30);
+    --teal: #14b8a6;        /* hsl(174 72% 43%) */
+    --teal-bright: #2dd4bf;
+    --teal-deep: #0d9488;
+    --cyan: #22d3ee;
+    --ink: #ffffff;
+    --muted: #94a3b8;       /* slate-400 */
+    --muted-2: #64748b;     /* slate-500 */
+    --amber: #fbbf24;
+    --radius: 18px;
+    --stage-w: 1280px;
+    --stage-h: 720px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  /* ---------- viewport + scaling ---------- */
+  #viewport {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+      radial-gradient(1200px 700px at 80% -10%, rgba(20,184,166,0.10), transparent 60%),
+      radial-gradient(900px 600px at 5% 110%, rgba(34,211,238,0.08), transparent 55%),
+      var(--bg);
+  }
+
+  #stage {
+    position: relative;
+    width: var(--stage-w);
+    height: var(--stage-h);
+    transform-origin: center center;
+    flex: none;
+  }
+
+  /* ---------- slides ---------- */
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    padding: 64px 76px 58px;
+    background:
+      linear-gradient(160deg, #0c1119 0%, #0a0e14 55%, #090c12 100%);
+    border-radius: 0;
+    overflow: hidden;
+  }
+  .slide.active { display: flex; animation: slideIn .45s cubic-bezier(.22,.61,.36,1); }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* faint dot grid texture shared by content slides */
+  .slide::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .slide > * { position: relative; z-index: 1; }
+
+  /* ---------- shared header ---------- */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--teal-bright);
+    margin-bottom: 14px;
+  }
+  .eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 12px var(--teal); }
+  .eyebrow .num { color: var(--muted-2); font-weight: 600; letter-spacing: .1em; }
+
+  h2.title {
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    max-width: 1000px;
+  }
+  .claim {
+    margin-top: 14px;
+    font-size: 19px;
+    line-height: 1.5;
+    color: var(--muted);
+    max-width: 940px;
+    font-weight: 400;
+  }
+  .claim strong { color: #e2e8f0; font-weight: 600; }
+
+  .gradient-text {
+    background: linear-gradient(135deg, var(--teal-bright) 0%, var(--teal-deep) 55%, var(--teal) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .body { margin-top: 30px; flex: 1; display: flex; flex-direction: column; min-height: 0; }
+
+  /* ---------- cards / grids ---------- */
+  .grid { display: grid; gap: 18px; }
+  .g2 { grid-template-columns: repeat(2, 1fr); }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  .g4 { grid-template-columns: repeat(4, 1fr); }
+  .g5 { grid-template-columns: repeat(5, 1fr); }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .card.teal { background: linear-gradient(135deg, rgba(20,184,166,0.10), rgba(34,211,238,0.06)); border-color: var(--border-teal); }
+  .card h3 { font-size: 18px; font-weight: 600; }
+  .card p  { font-size: 15px; line-height: 1.5; color: var(--muted); }
+  .card .ico {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: rgba(20,184,166,0.16);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--teal-bright);
+    margin-bottom: 4px;
+  }
+  .card .ico svg { width: 22px; height: 22px; }
+
+  /* metric tiles */
+  .metrics { display: grid; gap: 16px; }
+  .metric {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 22px;
+    text-align: left;
+  }
+  .metric .v { font-size: 38px; font-weight: 800; letter-spacing: -0.02em; color: var(--teal-bright); line-height: 1; }
+  .metric .v small { font-size: 18px; font-weight: 700; }
+  .metric .l { margin-top: 10px; font-size: 14px; line-height: 1.4; color: var(--muted); }
+
+  /* simple labelled list */
+  ul.checks { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  ul.checks li { display: flex; gap: 14px; align-items: flex-start; font-size: 17px; line-height: 1.45; color: #cbd5e1; }
+  ul.checks li .mk {
+    flex: none; margin-top: 2px;
+    width: 22px; height: 22px; border-radius: 7px;
+    background: rgba(20,184,166,0.18); color: var(--teal-bright);
+    display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700;
+  }
+  ul.checks li b { color: #fff; font-weight: 600; }
+
+  /* ladder / numbered steps */
+  .ladder { display: flex; flex-direction: column; gap: 14px; }
+  .rung {
+    display: flex; align-items: center; gap: 18px;
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 14px; padding: 16px 22px;
+  }
+  .rung .n {
+    flex: none; width: 38px; height: 38px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--teal), var(--teal-deep));
+    color: #04201c; font-weight: 800; font-size: 17px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .rung .t { font-size: 18px; font-weight: 600; }
+  .rung .d { font-size: 14px; color: var(--muted); margin-left: auto; text-align: right; max-width: 520px; }
+
+  /* pill row */
+  .pills { display: flex; flex-wrap: wrap; gap: 10px; }
+  .pill {
+    font-size: 14px; font-weight: 600; color: #d1fae5;
+    background: rgba(20,184,166,0.12); border: 1px solid var(--border-teal);
+    padding: 8px 16px; border-radius: 999px;
+  }
+
+  .lede { font-size: 21px; line-height: 1.55; color: #cbd5e1; max-width: 920px; }
+  .lede b { color: #fff; }
+
+  /* dose escalation bars */
+  .doses { display: flex; align-items: flex-end; gap: 16px; height: 230px; }
+  .dose { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 12px; height: 100%; justify-content: flex-end; }
+  .dose .bar {
+    width: 100%; border-radius: 12px 12px 4px 4px;
+    background: linear-gradient(180deg, var(--teal-bright), var(--teal-deep));
+    box-shadow: 0 0 30px rgba(20,184,166,0.25);
+  }
+  .dose .mg { font-size: 18px; font-weight: 700; }
+  .dose .lbl { font-size: 12px; color: var(--muted-2); }
+
+  .footnote { font-size: 12.5px; color: var(--muted-2); line-height: 1.5; }
+
+  /* ---------- slide footer ---------- */
+  .sfoot {
+    position: absolute; left: 76px; right: 76px; bottom: 26px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 12px; color: var(--muted-2); letter-spacing: .04em;
+    z-index: 2;
+  }
+  .sfoot .brand { display: flex; align-items: center; gap: 9px; font-weight: 600; color: #cbd5e1; }
+  .sfoot .brand img { height: 18px; width: auto; opacity: .95; border-radius: 3px; }
+
+  /* ============================================================
+     TITLE SLIDE
+     ============================================================ */
+  #title { padding: 0; }
+  #title canvas { position: absolute; inset: 0; z-index: 0; }
+  #title .glow1 { position: absolute; top: 18%; left: 16%; width: 420px; height: 420px; border-radius: 50%; background: rgba(20,184,166,0.18); filter: blur(90px); z-index: 0; }
+  #title .glow2 { position: absolute; bottom: 12%; right: 14%; width: 360px; height: 360px; border-radius: 50%; background: rgba(34,211,238,0.12); filter: blur(90px); z-index: 0; }
+  #title .inner {
+    position: relative; z-index: 2; height: 100%;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 0 92px;
+  }
+  #title .logo-row { display: flex; align-items: center; gap: 16px; margin-bottom: 38px; }
+  #title .logo-row img { height: 56px; width: auto; border-radius: 8px; }
+  #title .logo-row .name { font-size: 24px; font-weight: 700; letter-spacing: .02em; }
+  #title .logo-row .name span { display: block; font-size: 13px; font-weight: 500; color: var(--muted); letter-spacing: .18em; text-transform: uppercase; margin-top: 2px; }
+  #title h1 {
+    font-size: 60px; font-weight: 800; line-height: 1.08; letter-spacing: -0.03em;
+    max-width: 1020px;
+  }
+  #title .sub { margin-top: 26px; font-size: 21px; color: var(--muted); max-width: 820px; line-height: 1.5; }
+  #title .chips { display: flex; gap: 12px; margin-top: 40px; flex-wrap: wrap; }
+  #title .chip {
+    display: inline-flex; align-items: center; gap: 9px;
+    background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+    border-radius: 999px; padding: 11px 20px; font-size: 15px; font-weight: 500; color: #e2e8f0;
+  }
+  #title .chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); }
+  #title .meta {
+    position: absolute; left: 92px; right: 92px; bottom: 44px; z-index: 2;
+    display: flex; justify-content: space-between; align-items: flex-end;
+    font-size: 13px; color: var(--muted-2);
+  }
+  #title .meta .conf { color: var(--amber); font-weight: 600; letter-spacing: .08em; }
+
+  /* ============================================================
+     CLOSING SLIDE
+     ============================================================ */
+  #close .inner { height: 100%; display: flex; flex-direction: column; justify-content: center; }
+  #close h1 { font-size: 52px; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; max-width: 1000px; }
+  #close .three { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-top: 44px; }
+
+  /* ============================================================
+     CHROME: progress, nav, counter, overview
+     ============================================================ */
+  #progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--teal-bright), var(--cyan)); z-index: 50; transition: width .35s ease; box-shadow: 0 0 10px var(--teal); }
+
+  #chrome {
+    position: fixed; bottom: 18px; right: 22px; z-index: 50;
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(12,17,25,0.7); backdrop-filter: blur(10px);
+    border: 1px solid var(--border); border-radius: 999px; padding: 7px 9px 7px 16px;
+  }
+  #chrome .count { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 52px; text-align: center; }
+  #chrome button {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+    color: #e2e8f0; cursor: pointer; font-size: 15px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s, border-color .15s;
+  }
+  #chrome button:hover { background: rgba(20,184,166,0.2); border-color: var(--border-teal); }
+
+  #hint { position: fixed; bottom: 22px; left: 22px; z-index: 50; font-size: 12px; color: var(--muted-2); letter-spacing: .03em; }
+  #hint kbd { background: rgba(255,255,255,0.07); border: 1px solid var(--border); border-radius: 5px; padding: 1px 6px; font-family: inherit; font-size: 11px; color: #cbd5e1; }
+
+  /* overview grid */
+  #overview {
+    position: fixed; inset: 0; z-index: 60; display: none;
+    background: rgba(6,9,14,0.94); backdrop-filter: blur(6px);
+    padding: 40px; overflow-y: auto;
+  }
+  #overview.show { display: block; }
+  #overview h4 { font-size: 14px; letter-spacing: .16em; text-transform: uppercase; color: var(--teal-bright); margin-bottom: 22px; }
+  #ovGrid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+  .ov-card {
+    aspect-ratio: 16/9; border-radius: 12px; cursor: pointer;
+    background: linear-gradient(150deg, #0c1119, #090c12);
+    border: 1px solid var(--border); padding: 14px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    transition: border-color .15s, transform .15s;
+    overflow: hidden;
+  }
+  .ov-card:hover { border-color: var(--teal); transform: translateY(-3px); }
+  .ov-card.current { border-color: var(--teal); box-shadow: 0 0 0 1px var(--teal); }
+  .ov-card .ovn { font-size: 11px; color: var(--muted-2); font-weight: 600; }
+  .ov-card .ovt { font-size: 13px; font-weight: 600; line-height: 1.3; color: #e2e8f0; }
+
+  /* ---------- responsive print ---------- */
+  @media print {
+    html, body { overflow: visible; height: auto; }
+    #viewport { position: static; display: block; }
+    #stage { transform: none !important; }
+    .slide { display: flex !important; position: relative; page-break-after: always; width: var(--stage-w); height: var(--stage-h); }
+    #chrome, #hint, #progress, #overview { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<div id="viewport">
+  <div id="stage">
+
+    <!-- ============ 0 · TITLE ============ -->
+    <section class="slide active" data-title="Title">
+      <div id="title" style="position:absolute;inset:0;">
+        <canvas id="net"></canvas>
+        <div class="glow1"></div><div class="glow2"></div>
+        <div class="inner">
+          <div class="logo-row">
+            <img src="qbr-logo.jpg" alt="Quaerite logo" />
+            <div class="name">Quaerite<span>Biopharm Research · 寻济生物</span></div>
+          </div>
+          <h1>Making <span class="gradient-text">QBR202</span> a US retinal durability deal.</h1>
+          <p class="sub">A clinical-stage, albumin-complexed ocular biologics opportunity — anchored by QBR202, explained by the OcuHLE-X platform, extended by QBR207.</p>
+          <div class="chips">
+            <span class="chip"><span class="dot"></span>Clinical-stage lead asset</span>
+            <span class="chip"><span class="dot"></span>OcuHLE-X durability platform</span>
+            <span class="chip"><span class="dot"></span>QBR207 GA option value</span>
+          </div>
+        </div>
+        <div class="meta">
+          <span>Investor presentation · June 2026</span>
+          <span class="conf">CONFIDENTIAL — FOR DISCUSSION PURPOSES ONLY</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 1 · INVESTMENT SNAPSHOT ============ -->
+    <section class="slide" data-title="Investment Snapshot">
+      <div class="eyebrow"><span class="dot"></span>The Opportunity<span class="num">· 01</span></div>
+      <h2 class="title">The decision: buy QBR202 risk <span class="gradient-text">before 2026 human data reprices it</span>.</h2>
+      <div class="body">
+        <div class="metrics g4">
+          <div class="metric"><div class="v">Phase 1</div><div class="l">QBR202 China Phase 1 SAD active in nAMD</div></div>
+          <div class="metric"><div class="v">0.2<small> mg</small></div><div class="l">Starting dose already dosed in patients</div></div>
+          <div class="metric"><div class="v">27<small> µm</small></div><div class="l">CST reduction by Day 3 in first patient</div></div>
+          <div class="metric"><div class="v">2<small> + </small>9</div><div class="l">Granted patents + pending applications</div></div>
+        </div>
+        <div class="grid g3" style="margin-top:18px;">
+          <div class="card teal"><h3>Anchor asset</h3><p>QBR202 — an albumin-complexed VEGF-A / Ang-2 / HSA trispecific nanobody designed to out-last Vabysmo.</p></div>
+          <div class="card"><h3>Actionable rights</h3><p>US / ex-China rights available to structure now, ahead of a maturing 2026 clinical package.</p></div>
+          <div class="card"><h3>Real operating company</h3><p>32-person, Morningside-backed company with a Beijing lab — not a virtual asset shell.</p></div>
+        </div>
+      </div>
+      <div class="sfoot"><span class="brand"><img src="qbr-logo.jpg" alt="">Quaerite</span><span>Confidential · 02</span></div>
+    </section>
+
+    <!-- ============ 2 · MARKET PROBLEM ============ -->
+    <section class="slide" data-title="Market Problem">
+      <div class="eyebrow"><span class="dot"></span>Act I · The Market Problem<span class="num">· 02</span></div>
+      <h2 class="title">Retinal vascular disease still rewards a credible <span class="gradient-text">durability step-up</span>.</h2>
+      <div class="body">
+        <p class="lede">Anti-VEGF and VEGF/Ang-2 therapies are clinically validated, but <b>treatment burden persists</b>. To earn US share, QBR202 must prove <b>better duration — not merely similar biology</b>.</p>
+        <div class="grid g3" style="margin-top:28px;">
+          <div class="card">
+            <div class="ico">{{ICON_TARGET}}</div>
+            <h3>Vabysmo is the benchmark</h3>
+            <p>Faricimab set the bar for durability in nAMD and DME. Mechanism similarity alone does not move share.</p>
+          </div>
+          <div class="card">
+            <div class="ico">{{ICON_CLOCK}}</div>
+            <h3>Burden is the unmet need</h3>
+            <p>Frequent intravitreal injections drive under-treatment and real-world vision loss between visits.</p>
+          </div>
+          <div class="card">
+            <div class="ico">{{ICON_TREND}}</div>
+            <h3>Durability is the prize</h3>
+            <p>The product that meaningfully extends the dosing interval — while holding control — wins the conversation.</p>
+          </div>
+        </div>
+      </div>
+      <div class="sfoot"><span class="brand"><img src="qbr-logo.jpg" alt="">Quaerite</span><span>Confidential · 03</span></div>
+    </section>
+
+    <!-- ============ 3 · STRATEGIC BENCHMARK ============ -->
+    <section class="slide" data-title="Strategic Benchmark">
+      <div class="eyebrow"><span class="dot"></span>Positioning<span class="num">· 03</span></div>
+      <h2 class="title">QBR202 must earn share by creating a <span class="gradient-text">durability step-up over Vabysmo</span>.</h2>
+      <div class="body">
+        <div class="grid g3" style="align-items:stretch;">
+          <div class="card">
+            <span class="pill" style="align-self:flex-start;background:rgba(148,163,184,0.14);border-color:rgba(148,163,184,0.3);color:#cbd5e1;">Current IVT standards</span>
+            <h3 style="margin-top:14px;">Validated, but capped on duration</h3>
+            <p>Anti-VEGF and VEGF/Ang-2 biologics — efficacious, but burdened by injection frequency.</p>
+          </div>
+          <div class="card teal" style="transform:translateY(-10px);box-shadow:0 18px 50px rgba(20,184,166,0.18);">
+            <span class="pill" style="align-self:flex-start;">QBR202 target lane</span>
+            <h3 style="margin-top:14px;">Durability step-up, same control</h3>
+            <p>Extend the dosing interval while preserving potent VEGF-A / Ang-2 disease control — the open lane.</p>
+          </div>
+          <div class="card">
+            <span class="pill" style="align-self:flex-start;background:rgba(148,163,184,0.14);border-color:rgba(148,163,184,0.3);color:#cbd5e1;">Higher-burden modalities</span>
+            <h3 style="margin-top:14px;">Implants &amp; gene therapy</h3>
+            <p>Longer duration, but added procedural, manufacturing and safety complexity.</p>
+          </div>
+        </div>
+        <p class="footnote" style="margin-top:24px;">Positioning is directional and for discussion; competitive claims to be evidence-locked against current labels before external use.</p>
+      </div>
+      <div class="sfoot"><span class="brand"><img src="qbr-logo.jpg" alt="">Quaerite</span><span>Confidential · 04</span></div>
+    </section>
+
+    <!-- ============ 4 · OCUHLE-X PLATFORM ============ -->
+    <section class="slide" data-title="OcuHLE-X Platform">
+      <div class="eyebrow"><span class="dot"></span>Act II · Quaerite's Platform Answer<span class="num">· 04</span></div>
+      <h2 class="title">OcuHLE-X is the <span class="gradient-text">platform explanation</span> for QBR202.</h2>
+      <div class="body">
+        <p class="lede">A <b>molecule-plus-formulation</b> engineering platform for intravitreal biologics: an anti-HSA module is engineered into the biologic, while HSA is added as an excipient to form a <b>non-covalent albumin complex</b>.</p>
+        <div class="grid g3" style="margin-top:28px;">
+          <div class="card"><div class="ico">{{ICON_DNA}}</div><h3>Molecule engineering</h3><p>An albumin-binding (anti-HSA) module is built into engineered multi-specific biologics.</p></div>
+          <div class="card"><div class="ico">{{ICON_FLASK}}</div><h3>Formulation engineering</h3><p>HSA-containing drug product forms a high-molecular-weight, non-covalent complex.</p></div>
+          <div class="card teal"><div class="ico">{{ICON_CLOCK}}</div><h3>A controllable residence lever</h3><p>Larger hydrodynamic radius aims to extend ocular residence while preserving injectability.</p></div>
+        </div>
+      </div>
+      <div class="sfoot"><span class="brand"><img src="qbr-logo.jpg" alt="">Quaerite</span><span>Confidential · 05</span></div>
+    </section>
+
+    <!-- ============ 5 · PLATFORM MECHANICS ============ -->
+    <section class="slide" data-title="Platform Mechanics">
+      <div class="eyebrow"><span class="dot"></span>How It Works<span class="num">· 05</span></div>
+      <h2 class="title">Albumin complexation gives a <span class="gradient-text">controllable ocular residence lever</span>.</h2>
+      <div class="body">
+        <div class="grid g2" style="gap:28px;">
+          <ul class="checks">
+            <li><span class="mk">✓</span><span><b>Anti-HSA module</b> engineered directly into the molecule.</span></li>
+            <li><span class="mk">✓</span><span><b>HSA excipient</b> in the formulation drives complex formation.</span></li>
+            <li><span class="mk">✓</span><span>QBR202 forms at an approximate <b>1 : 1.8</b> nanobody : HSA ratio.</span></li>
+            <li><span class="mk">✓</span><span><b>Increased hydrodynamic radius</b> for extended residence.</span></li>
+            <li><span class="mk">✓</span><span>Observed <b>retinal / RPE tissue penetration</b> — exact mechanism still under study.</span></li>
+            <li><span class="mk">✓</span><span><b>Patent applications filed</b> on the platform approach.</span></li>
+          </ul>
+          <div class="card teal" style="justify-content:center;align-items:center;text-align:center;gap:18px;">
+            <div style="display:flex;align-items:center;gap:18px;">
+              <div style="width:64px;height:64px;border-radius:14px;background:rgba(20,184,166,0.2);display:flex;align-items:center;justify-content:center;color:var(--teal-bright);font-weight:800;">VHH</div>
+              <div style="font-size:30px;color:var(--teal-bright);">+</div>
+              <div style="width:84px;height:84px;border-radius:50%;background:rgba(34,211,238,0.16);border:1px dashed var(--border-teal);display:flex;align-items:center;justify-content:center;color:var(--cyan);font-weight:700;font-size:13px;">HSA</div>
+            </div>
+            <h3 style="margin-top:6px;">Non-covalent albumin complex</h3>
+            <p style="color:var(--muted);">Larger effective size → longer ocular residence, with retained retinal/choroidal exposure after IVT.</p>
+          </div>
+        </div>
+      </div>
+      <div class="sfoot"><span class="brand"><img src="qbr-logo.jpg" alt="">Quaerite</span><span>Confidential · 06</span></div>
+    </section>
+
+    <!-- ============ 6 · QBR202 LEAD ASSET ============ -->
+    <section class="slide" data-title="QBR202 Lead Asset">
+      <div class="eyebrow"><span class="dot"></span>Act III · The Deal Anchor<span class="num">· 06</span></div>
+      <h2 class="title">QBR202 crossed the line from <span class="gradient-text">platform promise into human testing</span>.</h2>
+      <div class="body">
+        <div class="grid g2" style="gap:22px;">
+          <div class="card teal">
+            <h3>Albumin-complexed trispecific nanobody</h3>
+            <p>Targets <b style="color:#fff;">VEGF-A</b>, <b style="color:#fff;">Ang-2</b> and <b style="color:#fff;">HSA</b> — durability-first design with differentiation in early drying, tissue retention and CMC reliability.</p>
+            <div class="pills" style="margin-top:10px;"><span class="pill">VEGF-A</span><span class="pill">Ang-2</span><span class="pill">HSA</span></div>
+          </div>
+          <div class="grid" style="grid-template-columns:1fr 1fr;gap:16px;">
+            <div class="metric"><div class="v">SAD</div><div class="l">China Phase 1 single-ascending-dose ongoing</div></div>
+            <div class="metric"><div class="v">nAMD</div><div class="l">SAD population; DME added in MAD</div></div>
+            <div class="metric"><div class="v">US / exCN</div><div class="l">Rights actionable for a transaction</div></div>
+            <div class="metric"><div class="v">Trispecific</div><div class="l">Tandem VHH fusion, IVT-compatible</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="sfoot"><span class="brand"><img src="qbr-logo.jpg" alt="">Quaerite</span><span>Confidential · 07</span></div>
+    </section>
+
+    <!-- ============ 7 · QBR202 DIFFERENTIATION ============ -->
+    <section class="slide" data-title="QBR202 Differentiation">
+      <div class="eyebrow"><span class="dot"></span>Differentiation<span class="num">· 07</span></div>
+      <h2 class="title">Designed to <span class="gradient-text">beat Vabysmo on duration</span>, not just match mechanism.</h2>
+      <div class="body">
+        <div class="ladder">
+          <div class="rung"><div class="n">1</div><div class="t">Duration</div><div class="d">The primary battleground — extend the interval between intravitreal injections.</div></div>
+          <div class="rung"><div class="n">2</div><div class="t">Early drying</div><div class="d">Speed and depth of early anatomical (fluid) response.</div></div>
+          <div class="rung"><div class="n">3</div><div class="t">Tissue penetration &amp; retention</div><div class="d">Retinal / RPE exposure that supports sustained disease control.</div></div>
+          <div class="rung"><div class="n">4</div><div class="t">Reliable CMC</div><div class="d">Stable, injectable, manufacturable drug product to support diligence.</div></div>
+        </div>
+        <p class="footnote" style="margin-top:18px;">Superiority claims vs. faricimab require evidence lock against exact comparator data before external use.</p>
+      </div>
+      <div class="sfoot"><span class="brand"><img src="qbr-logo.jpg" alt="">Quaerite</span><span>Confidential · 08</span></div>
+    </section>
+
+    <!-- ============ 8 · FIRST HUMAN SIGNAL ============ -->
+    <section class="slide" data-title="First Human Signal">
+      <div class="eyebrow"><span class="dot"></span>Act III · First Human Signal<span class="num">· 08</span></div>
+      <h2 class="title">Not proof of efficacy — proof the <span class="gradient-text">clinical story has begun</span>.</h2>
+      <div class="body">
+        <div class="grid g2" style="gap:22px;">
+          <div class="metrics" style="grid-template-columns:1fr 1fr;">
+            <div class="metric"><div class="v">Apr 13</div><div class="l">First patient dosed, 2026 — 0.2 mg starting dose</div></div>
+            <div class="metric"><div class="v">~280<small> µm</small></div><div class="l">Modest baseline central subfield thickness</div></div>
+            <div class="metric"><div class="v">−27<small> µm</small></div><div class="l">CST reduction by Day 3 on OCT</div></div>
+            <div class="metric"><div class="v">May 8</div><div class="l">Second patient dosed, 2026 — no AE to date</div></div>
+          </div>
+          <div class="card teal" style="justify-content:center;">
+            <h3>What we can and can't say</h3>
+            <ul class="checks" style="margin-top:6px;">
+              <li><span class="mk">✓</span><span><b>Clean one-month safety</b>, no adverse signals observed.</span></li>
+              <li><span class="mk">✓</span><span>Early <b>directional anatomical response</b> despite a low starting dose.</span></li>
+              <li><span class="mk" style="background:rgba(251,191,36,0.18);color:var(--amber);">!</span><span>BCVA interpretation <b>confounded by significant glaucoma</b>.</span></li>
+            </ul>
+          </div>
+        </div>
+        <p class="footnote" style="margin-top:16px;">n = 2 patients; observations are early and directional, not a demonstration of efficacy.</p>
+      </div>
+      <div class="sfoot"><span class="brand"><img src="qbr-logo.jpg" alt="">Quaerite</span><span>Confidential · 09</span></div>
+    </section>
+
+    <!-- ============ 9 · CLINICAL CATALYSTS ============ -->
+    <section class="slide" data-title="Clinical Catalysts">
+      <div class="eyebrow"><span class="dot"></span>Act IV · 2026 Catalysts<span class="num">· 09</span></div>
+      <h2 class="title">Dose escalation turns the core risk into a <span class="gradient-text">timed diligence event</span>.</h2>
+      <div class="body">
+        <div class="doses">
+          <div class="dose"><div class="bar" style="height:14%;"></div><div class="mg">0.2 mg</div><div class="lbl">dosed</div></div>
+          <div class="dose"><div class="bar" style="height:28%;"></div><div class="mg">0.5 mg</div><div class="lbl">SAD</div></div>
+          <div class="dose"><div class="bar" style="height:48%;"></div><div class="mg">1.2 mg</div><div class="lbl">SAD</div></div>
+          <div class="dose"><div class="bar" style="height:72%;"></div><div class="mg">2.5 mg</div><div class="lbl">SAD</div></div>
+          <div class="dose"><div class="bar" style="height:100%;"></div><div class="mg">5.0 mg</div><div class="lbl">SAD</div></div>
+        </div>
+        <div class="grid g3" style="margin-top:26px;">
+          <div class="card"><h3>SAD in nAMD</h3><p>Single-ascending-dose escalation across five dose levels in neovascular AMD.</p></div>
+          <div class="card"><h3>MAD adds DME</h3><p>Multiple-ascending-dose introduces both nAMD and DME to test durability more directly.</p></div>
+          <div class="card teal"><h3>Enrollment by Nov 2026</h3><p>SAD enrollment expected to complete by November 2026 — a near-term human-data catalyst.</p></div>
+        </div>
+      </div>
+      <div class="sfoot"><span class="brand"><img src="qbr-logo.jpg" alt="">Quaerite</span><span>Confidential · 10</span></div>
+    </section>
+
+    <!-- ============ 10 · TARGET PRODUCT PROFILE ============ -->
+    <section class="slide" data-title="Target Product Profile">
+      <div class="eyebrow"><span class="dot"></span>Ambition<span class="num">· 10</span></div>
+      <h2 class="title">The target product profile is a <span class="gradient-text">ladder, not a promise</span>.</h2>
+      <div class="body">
+        <div class="grid g3" style="align-items:stretch;">
+          <div class="card">
+            <div class="v" style="font-size:46px;font-weight:800;color:#cbd5e1;">3<span style="font-size:20px;">-month</span></div>
+            <h3>Credible case</h3>
+            <p>The base durability target the program is designed to establish.</p>
+          </div>
+          <div class="card teal" style="transform:translateY(-10px);">
+            <div class="v" style="font-size:46px;font-weight:800;color:var(--teal-bright);">4<span style="font-size:20px;">-month</span></div>
+            <h3>Target case</h3>
+            <p>The dosing interval QBR202 is being developed to achieve.</p>
+          </div>
+          <div class="card">
+            <div class="v" style="font-size:46px;font-weight:800;color:#cbd5e1;">6<span style="font-size:20px;">-month</span></div>
+            <h3>Ideal upside</h3>
+            <p>The upside scenario, pursued only if supported by clinical data.</p>
+          </div>
+        </div>
+        <p class="footnote" style="margin-top:22px;">Dosing-interval ambitions are design goals, not demonstrated outcomes, and require evidence lock before external use.</p>
+      </div>
+      <div class="sfoot"><span class="brand"><img src="qbr-logo.jpg" alt="">Quaerite</span><span>Confidential · 11</span></div>
+    </section>
+
+    <!-- ============ 11 · EVIDENCE BRIDGE ============ -->
+    <section class="slide" data-title="Evidence Bridge">
+      <div class="eyebrow"><span class="dot"></span>Act V · Evidence<span class="num">· 11</span></div>
+      <h2 class="title">The preclinical package tells us <span class="gradient-text">what to look for clinically</span>.</h2>
+      <div class="body">
+        <div class="grid g5">
+          <div class="card"><div class="ico">{{ICON_TARGET}}</div><h3 style="font-size:16px;">Potency</h3><p>VEGF-A &amp; Ang-2 binding and functional inhibition.</p></div>
+          <div class="card"><div class="ico">{{ICON_EYE}}</div><h3 style="font-size:16px;">CNV efficacy</h3><p>Efficacy and durability signals in CNV models.</p></div>
+          <div class="card"><div class="ico">{{ICON_FLASK}}</div><h3 style="font-size:16px;">Ocular PK</h3><p>Rabbit / NHP PK with retinal &amp; choroid exposure.</p></div>
+          <div class="card"><div class="ico">{{ICON_SHIELD}}</div><h3 style="font-size:16px;">Low systemic</h3><p>Low systemic exposure after IVT delivery.</p></div>
+          <div class="card"><div class="ico">{{ICON_BOX}}</div><h3 style="font-size:16px;">IVT-ready CMC</h3><p>Injectable, IVT-compatible formulation &amp; CMC.</p></div>
+        </div>
+        <p class="lede" style="margin-top:30px;">Each preclinical category maps to a specific clinical readout — so the Phase 1 program is a <b>structured test of a stated hypothesis</b>, not a search for one.</p>
+      </div>
+      <div class="sfoot"><span class="brand"><img src="qbr-logo.jpg" alt="">Quaerite</span><span>Confidential · 12</span></div>
+    </section>
+
+    <!-- ============ 12 · CMC & DEVELOPABILITY ============ -->
+    <section class="slide" data-title="CMC & Developability">
+      <div class="eyebrow"><span class="dot"></span>Developability<span class="num">· 12</span></div>
+      <h2 class="title">Not only a biology bet — the <span class="gradient-text">CMC story stays visible</span>.</h2>
+      <div class="body">
+        <div class="grid g2" style="gap:22px;">
+          <div class="grid" style="grid-template-columns:1fr 1fr;gap:16px;">
+            <div class="card"><h3>Tandem VHH fusion</h3><p>A single-chain, multi-specific format built for manufacturability.</p></div>
+            <div class="card"><h3>Standard purification</h3><p>Conventional recombinant protein process — no exotic steps.</p></div>
+            <div class="card"><h3>IVT-designed formulation</h3><p>Drug product engineered specifically for intravitreal injection.</p></div>
+            <div class="card"><h3>Diligence-ready data</h3><p>Stability, viscosity, endotoxin and particulate data packages.</p></div>
+          </div>
+          <div class="card teal" style="justify-content:center;">
+            <h3>Why it matters to a buyer</h3>
+            <p style="font-size:16px;">A durable molecule is only valuable if it is <b style="color:#fff;">stable, injectable and manufacturable at clinical scale</b>. QBR202's format and process are designed to keep CMC out of the critical path.</p>
+            <div class="pills" style="margin-top:10px;"><span class="pill">Stability</span><span class="pill">Viscosity</span><span class="pill">Endotoxin</span><span class="pill">Particulates</span><span class="pill">Injectability</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="sfoot"><span class="brand"><img src="qbr-logo.jpg" alt="">Quaerite</span><span>Confidential · 13</span></div>
+    </section>
+
+    <!-- ============ 13 · DEAL ARCHITECTURE ============ -->
+    <section class="slide" data-title="Deal Architecture">
+      <div class="eyebrow"><span class="dot"></span>The Transaction<span class="num">· 13</span></div>
+      <h2 class="title">Three structures let the investor <span class="gradient-text">choose risk appetite and control</span>.</h2>
+      <div class="body">
+        <div class="grid g3" style="align-items:stretch;">
+          <div class="card">
+            <div class="ico">{{ICON_BOLT}}</div>
+            <h3>Premium now</h3>
+            <p>A meaningful upfront / down payment in exchange for broader outside-China rights or fuller development control.</p>
+          </div>
+          <div class="card">
+            <div class="ico">{{ICON_SHIELD}}</div>
+            <h3>De-risk first</h3>
+            <p>Financing for US clinical development, with rights and economics tied to defined clinical or regulatory milestones.</p>
+          </div>
+          <div class="card">
+            <div class="ico">{{ICON_PLUS}}</div>
+            <h3>Bundle upside</h3>
+            <p>QBR207 added as a priced option or structured upside — with QBR202 as the valuation anchor.</p>
+          </div>
+        </div>
+        <div class="card teal" style="margin-top:18px;flex-direction:row;align-items:center;gap:16px;">
+          <div class="ico" style="margin:0;">{{ICON_ANCHOR}}</div>
+          <p style="font-size:16px;"><b style="color:#fff;">Base case:</b> Quaerite prefers to retain China interests in QBR202 while out-licensing or structuring US / ex-China rights.</p>
+        </div>
+      </div>
+      <div class="sfoot"><span class="brand"><img src="qbr-logo.jpg" alt="">Quaerite</span><span>Confidential · 14</span></div>
+    </section>
+
+    <!-- ============ 14 · QBR207 OPTION ============ -->
+    <section class="slide" data-title="QBR207 Option">
+      <div class="eyebrow"><span class="dot"></span>Act V · Pipeline Upside<span class="num">· 14</span></div>
+      <h2 class="title">QBR207 makes the platform broader <span class="gradient-text">without diluting the QBR202 ask</span>.</h2>
+      <div class="body">
+        <p class="lede"><b>C3 and C5 are clinically validated GA nodes.</b> QBR207 is a dual C3/C5 multi-specific nanobody for geographic atrophy — built in a validated target space, so it carries comparatively lower target risk.</p>
+        <div class="grid g3" style="margin-top:28px;">
+          <div class="card"><div class="ico">{{ICON_SHIELD}}</div><h3>Lower target risk</h3><p>Approved GA drugs already validate C3 and C5 as therapeutic nodes.</p></div>
+          <div class="card teal"><div class="ico">{{ICON_BRANCH}}</div><h3>Dual-node control</h3><p>Dual C3/C5 inhibition creates the possibility of broader disease control.</p></div>
+          <div class="card"><div class="ico">{{ICON_PLUS}}</div><h3>Structured option value</h3><p>Demonstrates OcuHLE-X is not a one-asset construct — without distracting from QBR202.</p></div>
+        </div>
+      </div>
+      <div class="sfoot"><span class="brand"><img src="qbr-logo.jpg" alt="">Quaerite</span><span>Confidential · 15</span></div>
+    </section>
+
+    <!-- ============ 15 · QBR207 DIFFERENTIATION ============ -->
+    <section class="slide" data-title="QBR207 Differentiation">
+      <div class="eyebrow"><span class="dot"></span>QBR207 · Mechanism<span class="num">· 15</span></div>
+      <h2 class="title">Dual C3/C5 inhibition may offer <span class="gradient-text">broader complement suppression</span>.</h2>
+      <div class="body">
+        <div class="grid g5">
+          <div class="card"><h3 style="font-size:16px;">AP / CP hemolysis</h3><p>Inhibition of alternative &amp; classical pathway hemolysis.</p></div>
+          <div class="card"><h3 style="font-size:16px;">C3a / C5a release</h3><p>Suppression of pro-inflammatory anaphylatoxin release.</p></div>
+          <div class="card"><h3 style="font-size:16px;">C3b deposition</h3><p>Reduced C3b deposition on target surfaces.</p></div>
+          <div class="card"><h3 style="font-size:16px;">RPE rescue</h3><p>Rescue of RPE phagocytosis function.</p></div>
+          <div class="card"><h3 style="font-size:16px;">Macrophage modulation</h3><p>Modulation of macrophage inflammatory activity.</p></div>
+        </div>
+        <p class="footnote" style="margin-top:30px;">Comparative complement-inhibition claims vs. approved GA therapies require evidence lock before external use. ARVO data available in appendix.</p>
+      </div>
+      <div class="sfoot"><span class="brand"><img src="qbr-logo.jpg" alt="">Quaerite</span><span>Confidential · 16</span></div>
+    </section>
+
+    <!-- ============ 16 · COMPANY CREDIBILITY ============ -->
+    <section class="slide" data-title="Company Credibility">
+      <div class="eyebrow"><span class="dot"></span>Act VI · Credibility<span class="num">· 16</span></div>
+      <h2 class="title">A venture-backed operating company — <span class="gradient-text">not a virtual asset shell</span>.</h2>
+      <div class="body">
+        <div class="metrics g4">
+          <div class="metric"><div class="v">2018</div><div class="l">Founded; Cayman holding structure</div></div>
+          <div class="metric"><div class="v">3</div><div class="l">Financing rounds completed</div></div>
+          <div class="metric"><div class="v">32</div><div class="l">Employees, with a Beijing lab</div></div>
+          <div class="metric"><div class="v">2<small> + </small>9</div><div class="l">Granted patents + pending applications</div></div>
+        </div>
+        <div class="card teal" style="margin-top:18px;">
+          <h3>Investor base</h3>
+          <p style="font-size:16px;">Led by <b style="color:#fff;">Morningside</b>, with participation from 3E Bio, Alwin / Yahui, Bohe and other biomedical-focused venture investors.</p>
+          <div class="pills" style="margin-top:8px;"><span class="pill">Morningside (lead)</span><span class="pill">3E Bio</span><span class="pill">Alwin / Yahui</span><span class="pill">Bohe</span></div>
+        </div>
+      </div>
+      <div class="sfoot"><span class="brand"><img src="qbr-logo.jpg" alt="">Quaerite</span><span>Confidential · 17</span></div>
+    </section>
+
+    <!-- ============ 17 · TEAM ============ -->
+    <section class="slide" data-title="Team">
+      <div class="eyebrow"><span class="dot"></span>The Team<span class="num">· 17</span></div>
+      <h2 class="title">The right mix: <span class="gradient-text">delivery, antibodies, execution and retina</span>.</h2>
+      <div class="body">
+        <div class="grid g2" style="gap:18px;">
+          <div class="card"><h3>Prof. Feng Qian — Founder</h3><p>Dean of Tsinghua School of Pharmaceutical Sciences; drug-delivery expert; 10 years at BMS.</p></div>
+          <div class="card"><h3>Dr. Li Chen — CTO</h3><p>Decades of antibody development experience; two marketed drugs to his name.</p></div>
+          <div class="card"><h3>COO</h3><p>Decades of management experience across global life-science companies, including Novozymes / Novonesis.</p></div>
+          <div class="card teal"><h3>Prof. Tien Yin Wong — Lead Advisor</h3><p>Internationally renowned retinal expert anchoring clinical and scientific strategy.</p></div>
+        </div>
+      </div>
+      <div class="sfoot"><span class="brand"><img src="qbr-logo.jpg" alt="">Quaerite</span><span>Confidential · 18</span></div>
+    </section>
+
+    <!-- ============ 18 · RISK & MITIGATION ============ -->
+    <section class="slide" data-title="Risk & Mitigation">
+      <div class="eyebrow"><span class="dot"></span>Act VI · Risk<span class="num">· 18</span></div>
+      <h2 class="title">The weakness is simple. The <span class="gradient-text">mitigation is also simple</span>.</h2>
+      <div class="body">
+        <div class="grid g3" style="align-items:stretch;">
+          <div class="card" style="border-color:rgba(251,191,36,0.3);">
+            <span class="pill" style="align-self:flex-start;background:rgba(251,191,36,0.14);border-color:rgba(251,191,36,0.35);color:var(--amber);">Risk</span>
+            <h3 style="margin-top:12px;">Human data are early</h3>
+            <p>Limited human exposure; durability, dose response and visual / anatomical benefit still need confirmation.</p>
+          </div>
+          <div class="card teal">
+            <span class="pill" style="align-self:flex-start;">Mitigation</span>
+            <h3 style="margin-top:12px;">The study is live</h3>
+            <p>China Phase 1 is underway with early clean safety and a directional low-dose anatomical signal.</p>
+          </div>
+          <div class="card">
+            <span class="pill" style="align-self:flex-start;">Catalyst</span>
+            <h3 style="margin-top:12px;">SAD through 5 mg</h3>
+            <p>Dose escalation to 5 mg, with SAD enrollment expected to complete by November 2026.</p>
+          </div>
+        </div>
+        <p class="lede" style="margin-top:26px;">Owning the conversation now means <b>buying the risk before the 2026 data package makes the story obvious</b>.</p>
+      </div>
+      <div class="sfoot"><span class="brand"><img src="qbr-logo.jpg" alt="">Quaerite</span><span>Confidential · 19</span></div>
+    </section>
+
+    <!-- ============ 19 · CLOSING THESIS ============ -->
+    <section class="slide" data-title="Closing Thesis">
+      <div id="close" style="position:absolute;inset:0;padding:64px 92px;">
+        <span class="glow1" style="position:absolute;top:10%;right:12%;width:380px;height:380px;border-radius:50%;background:rgba(20,184,166,0.14);filter:blur(90px);"></span>
+        <div class="inner">
+          <div class="eyebrow"><span class="dot"></span>Closing Thesis<span class="num">· 19</span></div>
+          <h1>Own the <span class="gradient-text">QBR202 conversation</span> before the data package becomes obvious.</h1>
+          <div class="three">
+            <div class="card teal"><h3>QBR202</h3><p>The near-term deal — a clinical-stage durability asset with US / ex-China rights actionable now.</p></div>
+            <div class="card"><h3>OcuHLE-X</h3><p>The platform rationale for why QBR202 could deliver differentiated durability.</p></div>
+            <div class="card"><h3>QBR207</h3><p>The structured GA / complement upside that broadens the platform story.</p></div>
+          </div>
+        </div>
+        <div style="position:absolute;left:92px;right:92px;bottom:44px;display:flex;justify-content:space-between;align-items:flex-end;font-size:13px;color:var(--muted-2);">
+          <span class="brand" style="display:flex;align-items:center;gap:9px;font-weight:600;color:#cbd5e1;"><img src="qbr-logo.jpg" style="height:20px;border-radius:4px;" alt="">Quaerite Biopharm Research · 寻济生物</span>
+          <span class="conf" style="color:var(--amber);font-weight:600;letter-spacing:.08em;">CONFIDENTIAL — FOR DISCUSSION PURPOSES ONLY</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 20 · DISCLAIMER ============ -->
+    <section class="slide" data-title="Disclaimer">
+      <div class="eyebrow"><span class="dot"></span>Important Notice<span class="num">· 20</span></div>
+      <h2 class="title" style="font-size:30px;">Disclaimer &amp; forward-looking statements</h2>
+      <div class="body" style="margin-top:18px;">
+        <p style="font-size:15px;line-height:1.7;color:var(--muted);max-width:1060px;">
+          This presentation is <b style="color:#cbd5e1;">confidential</b> and provided solely for discussion purposes. It does not constitute an offer to sell or a solicitation of an offer to buy any security, nor investment, legal, tax or medical advice. QBR202 and QBR207 are <b style="color:#cbd5e1;">investigational</b> and have not been approved by any regulatory authority; no conclusions regarding safety or efficacy should be drawn from the early, limited clinical observations described herein.
+        </p>
+        <p style="font-size:15px;line-height:1.7;color:var(--muted);max-width:1060px;margin-top:16px;">
+          Clinical observations reflect a small number of patients and are <b style="color:#cbd5e1;">early and directional</b> only. Statements regarding dosing intervals, durability, comparative potency or competitive positioning, platform extensibility, intellectual-property breadth, market size and regulatory pathways are forward-looking, subject to change, and must be <b style="color:#cbd5e1;">evidence-locked against primary sources</b> before any external use. Comparator references (e.g., Vabysmo, Syfovre, Izervay) are to third-party products for context only.
+        </p>
+        <p class="footnote" style="margin-top:26px;">© 2026 Quaerite Biopharm Research (寻济生物科技（北京）有限公司). All rights reserved. Cayman holding structure.</p>
+      </div>
+      <div class="sfoot"><span class="brand"><img src="qbr-logo.jpg" alt="">Quaerite</span><span>Confidential · 21</span></div>
+    </section>
+
+  </div><!-- /#stage -->
+</div><!-- /#viewport -->
+
+<!-- chrome -->
+<div id="hint">Use <kbd>←</kbd> <kbd>→</kbd> to navigate · <kbd>O</kbd> overview · <kbd>F</kbd> fullscreen</div>
+<div id="chrome">
+  <button id="prev" aria-label="Previous slide">‹</button>
+  <span class="count"><span id="cur">1</span> / <span id="tot">21</span></span>
+  <button id="next" aria-label="Next slide">›</button>
+  <button id="grid" aria-label="Overview">▦</button>
+</div>
+
+<div id="overview"><h4>Quaerite Corporate Deck · Overview</h4><div id="ovGrid"></div></div>
+
+<script>
+/* ---------- inline SVG icons ---------- */
+const ICONS = {
+  ICON_TARGET: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>',
+  ICON_CLOCK: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>',
+  ICON_TREND: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l6-6 4 4 7-7"/><path d="M17 8h4v4"/></svg>',
+  ICON_DNA: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 3c0 4 10 6 10 10s-10 4-10 8"/><path d="M17 3c0 4-10 6-10 10s10 4 10 8"/><path d="M8 6h8M8 18h8M9.5 9h5M9.5 15h5"/></svg>',
+  ICON_FLASK: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6l-5 8a2 2 0 0 0 1.7 3h10.6a2 2 0 0 0 1.7-3l-5-8V3"/><path d="M7 15h10"/></svg>',
+  ICON_EYE: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+  ICON_SHIELD: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>',
+  ICON_BOX: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>',
+  ICON_BOLT: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>',
+  ICON_PLUS: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>',
+  ICON_ANCHOR: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="2.5"/><path d="M12 7.5V21M5 13a7 7 0 0 0 14 0M5 13H3m16 0h2"/></svg>',
+  ICON_BRANCH: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="9" r="2.5"/><path d="M6 8.5v7M8.5 6H14a2 2 0 0 1 2 2v.5M15.8 11l-7 5.5"/></svg>'
+};
+document.querySelectorAll('.ico').forEach(el => {
+  const key = (el.textContent || '').trim().replace(/[{}]/g,'');
+  if (ICONS[key]) el.innerHTML = ICONS[key];
+});
+
+/* ---------- deck engine ---------- */
+const slides = Array.from(document.querySelectorAll('.slide'));
+const total = slides.length;
+let idx = 0;
+document.getElementById('tot').textContent = total;
+
+const stage = document.getElementById('stage');
+function fit() {
+  const pad = 0;
+  const sw = window.innerWidth / 1280;
+  const sh = window.innerHeight / 720;
+  const scale = Math.min(sw, sh);
+  stage.style.transform = 'scale(' + scale + ')';
+}
+window.addEventListener('resize', fit); fit();
+
+function show(n) {
+  idx = Math.max(0, Math.min(total - 1, n));
+  slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+  document.getElementById('cur').textContent = idx + 1;
+  document.getElementById('progress').style.width = ((idx) / (total - 1) * 100) + '%';
+  document.querySelectorAll('.ov-card').forEach((c, i) => c.classList.toggle('current', i === idx));
+}
+function next() { show(idx + 1); }
+function prev() { show(idx - 1); }
+
+document.getElementById('next').onclick = next;
+document.getElementById('prev').onclick = prev;
+
+/* overview grid */
+const ovGrid = document.getElementById('ovGrid');
+slides.forEach((s, i) => {
+  const card = document.createElement('div');
+  card.className = 'ov-card';
+  card.innerHTML = '<div class="ovn">' + (i === 0 ? 'Title' : String(i).padStart(2,'0')) + '</div><div class="ovt">' + (s.dataset.title || '') + '</div>';
+  card.onclick = () => { show(i); toggleOverview(false); };
+  ovGrid.appendChild(card);
+});
+const overview = document.getElementById('overview');
+function toggleOverview(force) {
+  const open = force !== undefined ? force : !overview.classList.contains('show');
+  overview.classList.toggle('show', open);
+}
+document.getElementById('grid').onclick = () => toggleOverview();
+
+/* keyboard */
+document.addEventListener('keydown', (e) => {
+  switch (e.key) {
+    case 'ArrowRight': case 'PageDown': case ' ': e.preventDefault(); next(); break;
+    case 'ArrowLeft': case 'PageUp': prev(); break;
+    case 'Home': show(0); break;
+    case 'End': show(total - 1); break;
+    case 'o': case 'O': toggleOverview(); break;
+    case 'Escape': toggleOverview(false); break;
+    case 'f': case 'F':
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+      else document.exitFullscreen?.();
+      break;
+  }
+});
+
+/* swipe (touch) */
+let tx = 0;
+document.addEventListener('touchstart', e => tx = e.touches[0].clientX, {passive:true});
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  if (Math.abs(dx) > 50) (dx < 0 ? next() : prev());
+}, {passive:true});
+
+/* deep-link via #n */
+const hashN = parseInt(location.hash.replace('#',''), 10);
+show(Number.isFinite(hashN) ? hashN - 1 : 0);
+
+/* ---------- title particle network (mirrors Hero.tsx) ---------- */
+(function () {
+  const canvas = document.getElementById('net');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let parts = [], raf;
+  function resize() { canvas.width = 1280; canvas.height = 720; }
+  function seed() {
+    parts = [];
+    for (let i = 0; i < 46; i++) parts.push({
+      x: Math.random()*1280, y: Math.random()*720,
+      vx: (Math.random()-0.5)*0.3, vy: (Math.random()-0.5)*0.3,
+      r: Math.random()*2+1, o: Math.random()*0.5+0.2
+    });
+  }
+  function draw() {
+    ctx.clearRect(0,0,1280,720);
+    for (let i=0;i<parts.length;i++){
+      for (let j=i+1;j<parts.length;j++){
+        const a=parts[i], b=parts[j];
+        const d=Math.hypot(a.x-b.x, a.y-b.y);
+        if (d<160){ ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+          ctx.strokeStyle='rgba(45,212,191,'+(0.15*(1-d/160))+')'; ctx.lineWidth=0.5; ctx.stroke(); }
+      }
+    }
+    parts.forEach(p=>{
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(45,212,191,'+p.o+')'; ctx.fill();
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0||p.x>1280)p.vx*=-1; if(p.y<0||p.y>720)p.vy*=-1;
+    });
+    raf=requestAnimationFrame(draw);
+  }
+  resize(); seed(); draw();
+})();
+</script>
+</body>
+</html>
