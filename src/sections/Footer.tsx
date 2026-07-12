@@ -1,157 +1,97 @@
-import { Linkedin, Twitter, Mail } from 'lucide-react';
-import { useLanguage } from '@/context/LanguageContext';
+import { Linkedin, Mail } from 'lucide-react';
+
+const LINKS = [
+  {
+    heading: 'Company',
+    items: [
+      { label: 'About Us', href: '#about' },
+      { label: 'Team', href: '#team' },
+      { label: 'News', href: '#news' },
+      { label: 'Careers', href: '#' },
+    ],
+  },
+  {
+    heading: 'Research',
+    items: [
+      { label: 'Technology', href: '#technology' },
+      { label: 'Pipeline', href: '#pipeline' },
+      { label: 'Disease Areas', href: '#diseases' },
+      { label: 'Publications', href: '#publications' },
+    ],
+  },
+  {
+    heading: 'Investors',
+    items: [
+      { label: 'Investor Relations', href: '#' },
+      { label: 'Corporate Governance', href: '#' },
+      { label: 'SEC Filings', href: '#' },
+      { label: 'Events & Presentations', href: '#' },
+    ],
+  },
+];
 
 export default function Footer() {
-  const { t, language } = useLanguage();
-
-  const footerLinks = {
-    company: [
-      { label: t.nav.about, href: '#about' },
-      { label: language === 'zh' ? '研发团队' : 'R&D Team', href: '#' },
-      { label: language === 'zh' ? '企业文化' : 'Culture', href: '#' },
-      { label: language === 'zh' ? '加入我们' : 'Careers', href: '#' },
-    ],
-    research: [
-      { label: t.nav.pipeline, href: '#pipeline' },
-      { label: t.nav.platform, href: '#platform' },
-      { label: t.nav.publications, href: '#publications' },
-      { label: language === 'zh' ? '临床试验' : 'Clinical Trials', href: '#' },
-    ],
-    news: [
-      { label: t.nav.news, href: '#news' },
-      { label: language === 'zh' ? '行业动态' : 'Industry News', href: '#news' },
-      { label: language === 'zh' ? '媒体中心' : 'Media Center', href: '#' },
-      { label: language === 'zh' ? '活动预告' : 'Events', href: '#' },
-    ],
-    contact: [
-      { label: t.nav.contact, href: '#contact' },
-      { label: t.nav.investor, href: '#' },
-      { label: language === 'zh' ? '合作伙伴' : 'Partners', href: '#' },
-      { label: language === 'zh' ? '不良反应报告' : 'Adverse Event Reporting', href: '#' },
-    ],
-  };
-
   return (
-    <footer className="bg-slate-950 border-t border-white/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="py-12 lg:py-16">
-          <div className="grid lg:grid-cols-6 gap-10">
-            <div className="lg:col-span-2">
-              <a href="#" className="flex items-center gap-2 mb-4">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center">
-                  <span className="text-white font-bold">Q</span>
-                </div>
-                <span className="text-white font-semibold text-xl">QUAERITE</span>
+    <footer className="bg-[#0E204C] text-white">
+      <div className="max-w-6xl mx-auto px-6 py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 mb-14">
+          {/* Brand */}
+          <div className="lg:col-span-2">
+            <div className="flex items-center gap-2 mb-4">
+              <span className="text-xl font-bold tracking-tight">Quaerite</span>
+              <span className="text-xs text-white/40 border border-white/20 rounded px-1.5 py-0.5">Biopharm</span>
+            </div>
+            <p className="text-white/50 text-sm leading-relaxed max-w-xs mb-6">
+              Clinical-stage gene therapy company dedicated to developing durable, single-treatment
+              solutions for blinding retinal diseases.
+            </p>
+            <div className="flex gap-3">
+              <a
+                href="#"
+                aria-label="LinkedIn"
+                className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center hover:border-[#2AB2E3] hover:text-[#2AB2E3] transition-colors"
+              >
+                <Linkedin className="w-4 h-4" />
               </a>
-              <p className="text-gray-400 text-sm leading-relaxed mb-6 max-w-sm">
-                {t.footer.desc}
-              </p>
-              <div className="flex items-center gap-3">
-                <a
-                  href="https://www.linkedin.com/company/寻济生物/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
-                >
-                  <Linkedin size={18} />
-                </a>
-                <a
-                  href="#"
-                  className="w-10 h-10 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
-                >
-                  <Twitter size={18} />
-                </a>
-                <a
-                  href="mailto:info@quaerite.com"
-                  className="w-10 h-10 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
-                >
-                  <Mail size={18} />
-                </a>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="text-white font-semibold mb-4">{t.footer.links.company}</h4>
-              <ul className="space-y-2">
-                {footerLinks.company.map((link) => (
-                  <li key={link.label}>
-                    <a
-                      href={link.href}
-                      className="text-sm text-gray-400 hover:text-teal-400 transition-colors"
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-white font-semibold mb-4">{t.footer.links.research}</h4>
-              <ul className="space-y-2">
-                {footerLinks.research.map((link) => (
-                  <li key={link.label}>
-                    <a
-                      href={link.href}
-                      className="text-sm text-gray-400 hover:text-teal-400 transition-colors"
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-white font-semibold mb-4">{t.footer.links.news}</h4>
-              <ul className="space-y-2">
-                {footerLinks.news.map((link) => (
-                  <li key={link.label}>
-                    <a
-                      href={link.href}
-                      className="text-sm text-gray-400 hover:text-teal-400 transition-colors"
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-white font-semibold mb-4">{t.footer.links.contact}</h4>
-              <ul className="space-y-2">
-                {footerLinks.contact.map((link) => (
-                  <li key={link.label}>
-                    <a
-                      href={link.href}
-                      className="text-sm text-gray-400 hover:text-teal-400 transition-colors"
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+              <a
+                href="mailto:info@quaerite.com"
+                aria-label="Email"
+                className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center hover:border-[#2AB2E3] hover:text-[#2AB2E3] transition-colors"
+              >
+                <Mail className="w-4 h-4" />
+              </a>
             </div>
           </div>
+
+          {/* Link groups */}
+          {LINKS.map((group) => (
+            <div key={group.heading}>
+              <p className="text-xs font-semibold tracking-widest text-white/40 uppercase mb-4">{group.heading}</p>
+              <ul className="space-y-2.5">
+                {group.items.map((item) => (
+                  <li key={item.label}>
+                    <a
+                      href={item.href}
+                      className="text-sm text-white/60 hover:text-white transition-colors"
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
-        <div className="py-6 border-t border-white/10">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-gray-500">
-              {t.footer.copyright}
-            </p>
-            <div className="flex items-center gap-6">
-              <a href="#" className="text-sm text-gray-500 hover:text-gray-300 transition-colors">
-                {t.footer.privacy}
-              </a>
-              <a href="#" className="text-sm text-gray-500 hover:text-gray-300 transition-colors">
-                {t.footer.terms}
-              </a>
-              <a href="#" className="text-sm text-gray-500 hover:text-gray-300 transition-colors">
-                {t.footer.sitemap}
-              </a>
-            </div>
+        {/* Bottom bar */}
+        <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-xs text-white/30">
+            &copy; {new Date().getFullYear()} Quaerite Biopharm Research. All rights reserved.
+          </p>
+          <div className="flex gap-6">
+            <a href="#" className="text-xs text-white/30 hover:text-white/60 transition-colors">Privacy Policy</a>
+            <a href="#" className="text-xs text-white/30 hover:text-white/60 transition-colors">Terms of Use</a>
+            <a href="#" className="text-xs text-white/30 hover:text-white/60 transition-colors">Cookie Policy</a>
           </div>
         </div>
       </div>
